@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    privileged: true
+    restart: always
+    ports:
+      - "8085:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /c/Users/mateo/Documents/Github/PostmanAPI_Practice:/var/jenkins_home/PostmanAPI_Practice
+    networks:
+      - jenkins_network
+  ssh-agent:
+    image: jenkins/ssh-agent
+
+volumes:
+  jenkins_home:
+
+networks:
+  jenkins_network:

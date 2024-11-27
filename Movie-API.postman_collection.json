@@ -1,0 +1,411 @@
+{
+	"info": {
+		"_postman_id": "7d2cba0d-d582-4a00-becb-98e5b2a3d60f",
+		"name": "Movie API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37364198"
+	},
+	"item": [
+		{
+			"name": "Get All movies",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURL}}/movies",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get movies by queries",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"const dramaMovies = response.filter( (movie) => movie.genre === 'Drama');\r",
+							"\r",
+							"const movie = dramaMovies[0];\r",
+							"\r",
+							"pm.test(\"Movie fround by genre\", () =>   {\r",
+							"    pm.expect(movie).to.be.an('object');\r",
+							"    pm.expect(movie.genre).to.eql('Drama');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURL}}/movies?genre=Drama",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"movies"
+					],
+					"query": [
+						{
+							"key": "genre",
+							"value": "Drama"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get movie by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/*\r",
+							"const response = pm.response.json();\r",
+							"const hasId = Object.keys(response).includes('id');\r",
+							"pm.test('Validate Id key', () => {\r",
+							"    pm.expect(true).to.be.eql(hasId);\r",
+							"});/*\r",
+							"\r",
+							"\r",
+							"/*\r",
+							"const response = pm.response.json();\r",
+							"const hasGenre = Object.keys(response).includes('genre');\r",
+							"pm.test('Validate genre', () => {\r",
+							"    pm.expect(true).to.be.eql(hasGenre);\r",
+							"});\r",
+							"\r",
+							"*/\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURL}}/movies/:movieId",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"movies",
+						":movieId"
+					],
+					"variable": [
+						{
+							"key": "movieId",
+							"value": "{{MovieSinGenero}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save new movie",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"const movieSchema = {\r",
+							"    title:'',\r",
+							"    year:'',\r",
+							"    genre:'',\r",
+							"    director:'',\r",
+							"    rate:''\r",
+							"}\r",
+							"\r",
+							"const body = JSON.parse(pm.request.body.raw);\r",
+							"const sameSchema = JSON.stringify(Object.keys(movieSchema)) ===JSON.stringify(Object.keys(body));\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test('Same schema', ()=> {\r",
+							"    pm.expect(true).to.be.eql(sameSchema);\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.globals.set('movieId', response.movieId);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImVtYWlsIjoic29tZW9uZUBnbWFpbC5jb20iLCJwYXNzd29yZCI6InBhc3N3b3JkMTIzIn0sImlhdCI6MTczMjYzMDM0MiwiZXhwIjoxNzMyNjM3NTQyfQ.kIZBcPrnlv0Y0ftZkaYGl4rCkJIftJpzExWwb1DnhDU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImVtYWlsIjoic29tZW9uZUBnbWFpbC5jb20iLCJwYXNzd29yZCI6InBhc3N3b3JkMTIzIn0sImlhdCI6MTczMjYzMDM0MiwiZXhwIjoxNzMyNjM3NTQyfQ.kIZBcPrnlv0Y0ftZkaYGl4rCkJIftJpzExWwb1DnhDU",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"DeadPool2\",\r\n    \"year\": \"2024\",\r\n    \"genre\": \"Comedia\",\r\n    \"director\": \"Fox\",\r\n    \"rate\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/movies",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Movie",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"\r",
+							"const movieSchema = {\r",
+							"    title:'',\r",
+							"    year:'',\r",
+							"    genre:'',\r",
+							"    director:'',\r",
+							"    rate:''\r",
+							"}\r",
+							"\r",
+							"const body = JSON.parse(pm.request.body.raw);\r",
+							"const sameSchema = JSON.stringify(Object.keys(movieSchema)) ===JSON.stringify(Object.keys(body));\r",
+							"\r",
+							"pm.test('Same schema', ()=> {\r",
+							"    pm.expect(true).to.be.eql(sameSchema);\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImVtYWlsIjoic29tZW9uZUBnbWFpbC5jb20iLCJwYXNzd29yZCI6InBhc3N3b3JkMTIzIn0sImlhdCI6MTczMjYzMDM0MiwiZXhwIjoxNzMyNjM3NTQyfQ.kIZBcPrnlv0Y0ftZkaYGl4rCkJIftJpzExWwb1DnhDU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\r\n        \"title\": \"{{$randomJobTitle}}\",\r\n        \"year\": \"{{$randomDatePast}}\",\r\n        \"genre\": \"{{$randomUserAgent}}\", \r\n        \"director\": \"{{$randomFullName}}\",\r\n        \"rate\": 5\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/movies/:movieId",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"movies",
+						":movieId"
+					],
+					"variable": [
+						{
+							"key": "movieId",
+							"value": "{{movieId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteMovie",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImVtYWlsIjoic29tZW9uZUBnbWFpbC5jb20iLCJwYXNzd29yZCI6InBhc3N3b3JkMTIzIn0sImlhdCI6MTczMjYzMDM0MiwiZXhwIjoxNzMyNjM3NTQyfQ.kIZBcPrnlv0Y0ftZkaYGl4rCkJIftJpzExWwb1DnhDU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURL}}/movies/:movieId",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"movies",
+						":movieId"
+					],
+					"variable": [
+						{
+							"key": "movieId",
+							"value": "{{movieId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"email\":\"someone@gmail.com\",\r\n   \"password\":\"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/register",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BaseURL",
+			"value": "http://localhost:3002/api"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
