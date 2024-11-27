@@ -151,6 +151,11 @@ newman run Movie-API.postman_collection.json -g workspace.postman_globals.json
 
 ---
 
+![image](https://github.com/user-attachments/assets/7d08a8ac-5a32-4c61-9625-e3580831a1cf)
+![image](https://github.com/user-attachments/assets/c611525c-79cf-452c-be53-ef652042d9e7)
+
+
+
 ## **Automatización con Newman y Jenkins**
 
 Este proyecto incluye scripts de Postman para validar automáticamente:
