@@ -281,7 +281,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{BaseURL}}/movies/:movieId",
+					"raw": "{{BaseURL}}/movies/{{movieId}}",
 					"host": [
 						"{{BaseURL}}"
 					],
@@ -330,7 +330,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{BaseURL}}/movies/:movieId",
+					"raw": "{{BaseURL}}/movies/{{movieId}}",
 					"host": [
 						"{{BaseURL}}"
 					],
