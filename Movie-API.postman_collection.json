@@ -178,7 +178,8 @@
 							"\r",
 							"});\r",
 							"\r",
-							"pm.globals.set('movieId', response.movieId);"
+							"pm.globals.set('movieId', response.movieId);\r",
+							""
 						],
 						"type": "text/javascript",
 						"packages": {}
