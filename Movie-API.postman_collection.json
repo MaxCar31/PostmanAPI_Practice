@@ -23,9 +23,26 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", () => {\r",
+							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
-							"});"
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"pm.test(\"Response is an array\", function () {\r",
+							"    pm.expect(response).to.be.an('array');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"All movies have required fields\", function () {\r",
+							"    response.forEach(movie => {\r",
+							"        pm.expect(movie).to.have.property('title');\r",
+							"        pm.expect(movie).to.have.property('year');\r",
+							"        pm.expect(movie).to.have.property('genre');\r",
+							"        pm.expect(movie).to.have.property('director');\r",
+							"        pm.expect(movie).to.have.property('rate');\r",
+							"        pm.expect(movie).to.have.property('id');\r",
+							"    });\r",
+							"});\r",
+							""
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -59,14 +76,16 @@
 							"});\r",
 							"\r",
 							"const response = pm.response.json();\r",
-							"const dramaMovies = response.filter( (movie) => movie.genre === 'Drama');\r",
+							"pm.test(\"Movies match the query parameter\", function () {\r",
+							"    response.forEach(movie => {\r",
+							"        pm.expect(movie.genre).to.eql('Drama');\r",
+							"    });\r",
+							"});\r",
 							"\r",
-							"const movie = dramaMovies[0];\r",
-							"\r",
-							"pm.test(\"Movie fround by genre\", () =>   {\r",
-							"    pm.expect(movie).to.be.an('object');\r",
-							"    pm.expect(movie.genre).to.eql('Drama');\r",
-							"});"
+							"pm.test(\"At least one movie found\", function () {\r",
+							"    pm.expect(response.length).to.be.greaterThan(0);\r",
+							"});\r",
+							""
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -105,22 +124,25 @@
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"/*\r",
 							"const response = pm.response.json();\r",
-							"const hasId = Object.keys(response).includes('id');\r",
-							"pm.test('Validate Id key', () => {\r",
-							"    pm.expect(true).to.be.eql(hasId);\r",
-							"});/*\r",
+							"const expectedId = pm.variables.get(\"MovieGet\");\r",
 							"\r",
-							"\r",
-							"/*\r",
-							"const response = pm.response.json();\r",
-							"const hasGenre = Object.keys(response).includes('genre');\r",
-							"pm.test('Validate genre', () => {\r",
-							"    pm.expect(true).to.be.eql(hasGenre);\r",
+							"pm.test(\"Movie ID matches requested ID\", function () {\r",
+							"    pm.expect(response.id).to.eql(expectedId);\r",
 							"});\r",
 							"\r",
-							"*/\r",
+							"pm.test(\"Movie schema is valid\", function () {\r",
+							"    const schema = {\r",
+							"        title: '',\r",
+							"        year: '',\r",
+							"        genre: '',\r",
+							"        director: '',\r",
+							"        rate: '',\r",
+							"        id: ''\r",
+							"    };\r",
+							"    const keysMatch = JSON.stringify(Object.keys(schema)) === JSON.stringify(Object.keys(response));\r",
+							"    pm.expect(keysMatch).to.be.true;\r",
+							"});\r",
 							""
 						],
 						"type": "text/javascript",
@@ -143,7 +165,7 @@
 					"variable": [
 						{
 							"key": "movieId",
-							"value": "{{MovieSinGenero}}"
+							"value": "{{MovieGet}}"
 						}
 					]
 				}
@@ -178,8 +200,7 @@
 							"\r",
 							"});\r",
 							"\r",
-							"pm.globals.set('movieId', response.movieId);\r",
-							""
+							"pm.globals.set('movieId', response.movieId);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -208,7 +229,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"title\": \"DeadPool2\",\r\n    \"year\": \"2024\",\r\n    \"genre\": \"Comedia\",\r\n    \"director\": \"Fox\",\r\n    \"rate\": 5\r\n}",
+					"raw": "   {\r\n        \"title\": \"{{$randomJobTitle}}\",\r\n        \"year\": \"{{$randomDatePast}}\",\r\n        \"genre\": \"{{$randomUserAgent}}\", \r\n        \"director\": \"{{$randomFullName}}\",\r\n        \"rate\": 4\r\n    }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -282,7 +303,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{BaseURL}}/movies/{{movieId}}",
+					"raw": "{{BaseURL}}/movies/:movieId",
 					"host": [
 						"{{BaseURL}}"
 					],
@@ -310,6 +331,7 @@
 							"pm.test(\"Status code is 204\", function () {\r",
 							"    pm.response.to.have.status(204);\r",
 							"});\r",
+							"\r",
 							""
 						],
 						"type": "text/javascript",
@@ -331,7 +353,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{BaseURL}}/movies/{{movieId}}",
+					"raw": "{{BaseURL}}/movies/:movieId",
 					"host": [
 						"{{BaseURL}}"
 					],
