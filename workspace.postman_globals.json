@@ -15,7 +15,7 @@
 		},
 		{
 			"key": "BaseURL",
-			"value": "",
+			"value": "http://localhost:3000/api",
 			"type": "default",
 			"enabled": true
 		}
