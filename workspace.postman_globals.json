@@ -3,13 +3,13 @@
 	"values": [
 		{
 			"key": "MovieGet",
-			"value": "",
+			"value": "f0e2b460-b00c-11ef-9749-7546e2098eef",
 			"type": "default",
 			"enabled": true
 		},
 		{
 			"key": "movieId",
-			"value": "",
+			"value": "a651ed40-b01a-11ef-9a2d-994ec489fd36",
 			"type": "default",
 			"enabled": true
 		},
